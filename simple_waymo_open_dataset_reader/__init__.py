@@ -14,7 +14,7 @@
 # ==============================================================================
 
 import struct
-from . import dataset_pb2
+from simple_waymo_open_dataset_reader import dataset_pb2
 
 class WaymoDataFileReader:
     def __init__(self, filename):

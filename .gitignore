@@ -1,0 +1,5 @@
+.DS_Store
+*.pyc
+simple_waymo_open_dataset_reader.egg-info/*
+build/*
+dist/*

@@ -1,18 +1,32 @@
-# Simple Waymo Open Dataset Reader
+# Simple Waymo Open Motion Dataset Reader
 
-This is a simple file reader for the [Waymo Open Dataset](https://waymo.com/open/) which does not depend on TensorFlow and Bazel. The main goal is to be able to quickly integrate Waymo’s dataset with other deep learning frameworks without having to pull tons of dependencies. It does not aim to replace the [whole framework](https://github.com/waymo-research/waymo-open-dataset), especially the evaluation metrics that they provide.
+This is a simple file reader for the [Waymo Open Dataset](https://waymo.com/open/) modified from the [simple-waymo-open-dataset-reader](https://github.com/gdlg/simple-waymo-open-dataset-reader). The main goal is to start interacting with the dataset quickly without installing the [waymo-open-dataset](https://github.com/waymo-research/waymo-open-dataset) repo, which doesn't work for Mac. It does not aim to replace the Waymo repo, especially the evaluation metrics that they provide.
+
+We additionally borrowed some preprocessing code from [SceneInformer](https://github.com/sisl/SceneInformer) to convert motion dataset protobuf into a dictionary. 
 
 ## Installation
-
-Use the provided `setup.py`:
-
+For dependencies, you only need `protobuf, tensorflow`:
 ```
-python setup.py install
+pip install protobuf, tensorflow
+```
+
+Then install the repo:
+```
+pip install -e .
+```
+
+Optinally regenerate the `*_pb2.py` files from the protos:
+```
+sh generate_proto.sh
 ```
 
 ## Usage
-
-Please refer to the examples in `examples/` for how to use the file reader. Refer to [https://github.com/waymo-research/waymo-open-dataset/blob/master/tutorial/tutorial.ipynb](https://github.com/waymo-research/waymo-open-dataset/blob/master/tutorial/tutorial.ipynb) for more details on Waymo’s dataset.
+To parse a motion dataset example, download `uncompressed/scenario/training/training.tfrecord-00000-of-01000` from thw Waymo website and then save it in a `./data` folder. Then run:
+```
+cd examples
+python parase_motion_dataset.py
+```
+You should see a new file `parsed_data.p` in the `./data` folder.
 
 ## License
 
