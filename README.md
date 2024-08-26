@@ -28,6 +28,14 @@ python parase_motion_dataset.py
 ```
 You should see a new file `parsed_data.p` in the `./data` folder.
 
+**Google could storage setup**: You can download data directly from GCS without manually downloading the tfrecords. To set it up, first download the CLI package from [here](https://cloud.google.com/sdk/docs/install-sdk) and go through items a, b, and c. Then follow the TF dataset authentication instructions [here](https://www.tensorflow.org/datasets/gcs). 
+
+To run the above example using GCS:
+```
+cd examples
+python parase_motion_dataset.py --gcs True
+```
+
 ## License
 
 This code is released under the Apache License, version 2.0. This projects incorporate some parts of the [Waymo Open Dataset code](https://github.com/waymo-research/waymo-open-dataset/blob/master/README.md) (the files `simple_waymo_open_dataset_reader/*.proto`) and is licensed to you under their original license terms. See `LICENSE` file for details.
