@@ -34,63 +34,63 @@ _WAYMO_ROAD_STR = {
 
 # Constants defined for map drawing parameters.
 class FeatureType(enum.Enum):
-  """Definintions for map feature types."""
-  UNKNOWN_FEATURE = 0
-  FREEWAY_LANE = 1
-  SURFACE_STREET_LANE = 2
-  BIKE_LANE = 3
-  BROKEN_SINGLE_WHITE_BOUNDARY = 6
-  SOLID_SINGLE_WHITE_BOUNDARY = 7
-  SOLID_DOUBLE_WHITE_BOUNDARY = 8
-  BROKEN_SINGLE_YELLOW_BOUNDARY = 9
-  BROKEN_DOUBLE_YELLOW_BOUNDARY = 10
-  SOLID_SINGLE_YELLOW_BOUNDARY = 11
-  SOLID_DOUBLE_YELLOW_BOUNDARY = 12
-  PASSING_DOUBLE_YELLOW_BOUNDARY = 13
-  ROAD_EDGE_BOUNDARY = 15
-  ROAD_EDGE_MEDIAN = 16
-  STOP_SIGN = 17
-  CROSSWALK = 18
-  SPEED_BUMP = 19
-  DRIVEWAY = 20
+    """Definintions for map feature types."""
+    UNKNOWN_FEATURE = 0
+    FREEWAY_LANE = 1
+    SURFACE_STREET_LANE = 2
+    BIKE_LANE = 3
+    BROKEN_SINGLE_WHITE_BOUNDARY = 6
+    SOLID_SINGLE_WHITE_BOUNDARY = 7
+    SOLID_DOUBLE_WHITE_BOUNDARY = 8
+    BROKEN_SINGLE_YELLOW_BOUNDARY = 9
+    BROKEN_DOUBLE_YELLOW_BOUNDARY = 10
+    SOLID_SINGLE_YELLOW_BOUNDARY = 11
+    SOLID_DOUBLE_YELLOW_BOUNDARY = 12
+    PASSING_DOUBLE_YELLOW_BOUNDARY = 13
+    ROAD_EDGE_BOUNDARY = 15
+    ROAD_EDGE_MEDIAN = 16
+    STOP_SIGN = 17
+    CROSSWALK = 18
+    SPEED_BUMP = 19
+    DRIVEWAY = 20
 
 lane_types = {
-      map_pb2.LaneCenter.TYPE_UNDEFINED: FeatureType.UNKNOWN_FEATURE,
-      map_pb2.LaneCenter.TYPE_FREEWAY: FeatureType.FREEWAY_LANE,
-      map_pb2.LaneCenter.TYPE_SURFACE_STREET: FeatureType.SURFACE_STREET_LANE,
-      map_pb2.LaneCenter.TYPE_BIKE_LANE: FeatureType.BIKE_LANE,
-  }
+    map_pb2.LaneCenter.TYPE_UNDEFINED: FeatureType.UNKNOWN_FEATURE,
+    map_pb2.LaneCenter.TYPE_FREEWAY: FeatureType.FREEWAY_LANE,
+    map_pb2.LaneCenter.TYPE_SURFACE_STREET: FeatureType.SURFACE_STREET_LANE,
+    map_pb2.LaneCenter.TYPE_BIKE_LANE: FeatureType.BIKE_LANE,
+}
 road_line_types = {
-      map_pb2.RoadLine.TYPE_UNKNOWN: (
-          FeatureType.UNKNOWN_FEATURE
-      ),
-      map_pb2.RoadLine.TYPE_BROKEN_SINGLE_WHITE: (
-          FeatureType.BROKEN_SINGLE_WHITE_BOUNDARY
-      ),
-      map_pb2.RoadLine.TYPE_SOLID_SINGLE_WHITE: (
-          FeatureType.SOLID_SINGLE_WHITE_BOUNDARY
-      ),
-      map_pb2.RoadLine.TYPE_SOLID_DOUBLE_WHITE: (
-          FeatureType.SOLID_DOUBLE_WHITE_BOUNDARY
-      ),
-      map_pb2.RoadLine.TYPE_BROKEN_SINGLE_YELLOW: (
-          FeatureType.BROKEN_SINGLE_YELLOW_BOUNDARY
-      ),
-      map_pb2.RoadLine.TYPE_BROKEN_DOUBLE_YELLOW: (
-          FeatureType.BROKEN_DOUBLE_YELLOW_BOUNDARY
-      ),
-      map_pb2.RoadLine.TYPE_SOLID_SINGLE_YELLOW: (
-          FeatureType.SOLID_SINGLE_YELLOW_BOUNDARY
-      ),
-      map_pb2.RoadLine.TYPE_PASSING_DOUBLE_YELLOW: (
-          FeatureType.PASSING_DOUBLE_YELLOW_BOUNDARY
-      ),
-  }
+    map_pb2.RoadLine.TYPE_UNKNOWN: (
+        FeatureType.UNKNOWN_FEATURE
+    ),
+    map_pb2.RoadLine.TYPE_BROKEN_SINGLE_WHITE: (
+        FeatureType.BROKEN_SINGLE_WHITE_BOUNDARY
+    ),
+    map_pb2.RoadLine.TYPE_SOLID_SINGLE_WHITE: (
+        FeatureType.SOLID_SINGLE_WHITE_BOUNDARY
+    ),
+    map_pb2.RoadLine.TYPE_SOLID_DOUBLE_WHITE: (
+        FeatureType.SOLID_DOUBLE_WHITE_BOUNDARY
+    ),
+    map_pb2.RoadLine.TYPE_BROKEN_SINGLE_YELLOW: (
+        FeatureType.BROKEN_SINGLE_YELLOW_BOUNDARY
+    ),
+    map_pb2.RoadLine.TYPE_BROKEN_DOUBLE_YELLOW: (
+        FeatureType.BROKEN_DOUBLE_YELLOW_BOUNDARY
+    ),
+    map_pb2.RoadLine.TYPE_SOLID_SINGLE_YELLOW: (
+        FeatureType.SOLID_SINGLE_YELLOW_BOUNDARY
+    ),
+    map_pb2.RoadLine.TYPE_PASSING_DOUBLE_YELLOW: (
+        FeatureType.PASSING_DOUBLE_YELLOW_BOUNDARY
+    ),
+}
 road_edge_types = {
-      map_pb2.RoadEdge.TYPE_UNKNOWN: FeatureType.UNKNOWN_FEATURE,
-      map_pb2.RoadEdge.TYPE_ROAD_EDGE_BOUNDARY: FeatureType.ROAD_EDGE_BOUNDARY,
-      map_pb2.RoadEdge.TYPE_ROAD_EDGE_MEDIAN: FeatureType.ROAD_EDGE_MEDIAN,
-  }
+    map_pb2.RoadEdge.TYPE_UNKNOWN: FeatureType.UNKNOWN_FEATURE,
+    map_pb2.RoadEdge.TYPE_ROAD_EDGE_BOUNDARY: FeatureType.ROAD_EDGE_BOUNDARY,
+    map_pb2.RoadEdge.TYPE_ROAD_EDGE_MEDIAN: FeatureType.ROAD_EDGE_MEDIAN,
+}
 
 def _parse_object_state(
         states: scenario_pb2.ObjectState,
@@ -162,25 +162,31 @@ def _init_object(track: scenario_pb2.Track) -> Optional[Dict[str, Any]]:
     return obj
 
 def add_points(
-      feature_id: int,
-      points: List[map_pb2.MapPoint],
-      feature_type: FeatureType,
-      is_polygon=False,
+    feature_id: int,
+    points: List[map_pb2.MapPoint],
+    feature_type: FeatureType,
+    is_polygon=False,
+    speed_limit: int=-1,
+    entry_lanes: List[int]=[],
+    exit_lanes: List[int]=[],
 ) -> Optional[Dict[str, Any]]:
     if feature_type is None:
-      return
+        return
     
     sample = {
-       "id": feature_id,
-       "type": feature_type,
-       "points": [],
-       "is_polygon": is_polygon,
+        "id": feature_id,
+        "type": feature_type,
+        "points": [],
+        "is_polygon": is_polygon,
+        "speed_limit": speed_limit,
+        "entry_lanes": entry_lanes,
+        "exit_lanes": exit_lanes,
     }
     for point in points:
-       sample["points"].append({"x": point.x, "y": point.y})
+        sample["points"].append({"x": point.x, "y": point.y})
 
     if is_polygon:
-       sample["points"].append({"x": points[0].x, "y": points[0].y})
+        sample["points"].append({"x": points[0].x, "y": points[0].y})
 
     return sample
 
@@ -192,48 +198,51 @@ def _init_road(feature: map_pb2.MapFeature) -> Optional[Dict[str, Any]]:
         raise ValueError('feature_old_type is None')
 
     if feature.HasField('lane'):
-       sample = add_points(
-          feature.id,
-          list(feature.lane.polyline),
-          lane_types.get(feature.lane.type),
-      )
+        sample = add_points(
+            feature.id,
+            list(feature.lane.polyline),
+            lane_types.get(feature.lane.type),
+            speed_limit=feature.lane.speed_limit_mph,
+            entry_lanes=feature.lane.entry_lanes,
+            exit_lanes=feature.lane.exit_lanes,
+        )
     elif feature.HasField('road_line'):
-      feature_type = road_line_types.get(feature.road_line.type)
-      sample = add_points(
-          feature.id, list(feature.road_line.polyline), feature_type
-      )
+        feature_type = road_line_types.get(feature.road_line.type)
+        sample = add_points(
+            feature.id, list(feature.road_line.polyline), feature_type
+        )
     elif feature.HasField('road_edge'):
-      feature_type = road_edge_types.get(feature.road_edge.type)
-      sample = add_points(
-          feature.id, list(feature.road_edge.polyline), feature_type
-      )
+        feature_type = road_edge_types.get(feature.road_edge.type)
+        sample = add_points(
+            feature.id, list(feature.road_edge.polyline), feature_type
+        )
     elif feature.HasField('stop_sign'):
-      sample = add_points(
-          feature.id,
-          [feature.stop_sign.position],
-          FeatureType.STOP_SIGN,
-      )
+        sample = add_points(
+            feature.id,
+            [feature.stop_sign.position],
+            FeatureType.STOP_SIGN,
+        )
     elif feature.HasField('crosswalk'):
-      sample = add_points(
-          feature.id,
-          list(feature.crosswalk.polygon),
-          FeatureType.CROSSWALK,
-          True,
-      )
+        sample = add_points(
+            feature.id,
+            list(feature.crosswalk.polygon),
+            FeatureType.CROSSWALK,
+            True,
+        )
     elif feature.HasField('speed_bump'):
-      sample = add_points(
-          feature.id,
-          list(feature.speed_bump.polygon),
-          FeatureType.SPEED_BUMP,
-          True,
-      )
+        sample = add_points(
+            feature.id,
+            list(feature.speed_bump.polygon),
+            FeatureType.SPEED_BUMP,
+            True,
+        )
     elif feature.HasField('driveway'):
-      sample = add_points(
-          feature.id,
-          list(feature.driveway.polygon),
-          FeatureType.DRIVEWAY,
-          True,
-      )
+        sample = add_points(
+            feature.id,
+            list(feature.driveway.polygon),
+            FeatureType.DRIVEWAY,
+            True,
+        )
     else:
         if feature_old_type is None:
             sample = None
@@ -241,7 +250,7 @@ def _init_road(feature: map_pb2.MapFeature) -> Optional[Dict[str, Any]]:
             print(f'Sample is :{feature}')
 
     if sample is not None:
-       sample["old_type"] = feature_old_type
+        sample["old_type"] = feature_old_type
 
     return sample  
 
