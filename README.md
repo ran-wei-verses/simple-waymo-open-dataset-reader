@@ -24,7 +24,7 @@ sh generate_proto.sh
 To parse a motion dataset example, download `uncompressed/scenario/training/training.tfrecord-00000-of-01000` from thw Waymo website and then save it in a `./data` folder. Then run:
 ```
 cd examples
-python parase_motion_dataset.py
+python parse_motion_dataset.py
 ```
 You should see a new file `parsed_data.p` in the `./data` folder.
 
@@ -33,7 +33,7 @@ You should see a new file `parsed_data.p` in the `./data` folder.
 To run the above example using GCS:
 ```
 cd examples
-python parase_motion_dataset.py --gcs True
+python parse_motion_dataset.py --gcs True
 ```
 
 ## License
